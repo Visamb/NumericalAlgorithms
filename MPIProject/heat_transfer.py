@@ -3,7 +3,7 @@ from scipy import*
 from scipy.sparse import diags
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import cg, spsolve
-import matplotlib.pyplot as plt
+
 
 class heat_transfer:
     """Class for computing temperature distributions and storing the current distributions."""
@@ -17,7 +17,7 @@ class heat_transfer:
         self.Initial_T = 15
 
         #Number of (inner) grid points per unit length
-        self.n = 3
+        self.n = 4
         self.h = 1/self.n
 
         # Grid temperatures for the domains
@@ -145,6 +145,8 @@ class heat_transfer:
 
             self.T_domain_two = T
 
+            return self.omega_one_border, self.omega_three_border
+
         if domain == 1:
 
             nx = self.n + 1
@@ -162,6 +164,7 @@ class heat_transfer:
                 for i in range(1, nx + 1):
                     T[j, i] = solution[j + (i - 1) * ny - 1]
             self.T_domain_one = T
+            return self.Gamma1
 
         if domain == 3:
 
@@ -182,6 +185,7 @@ class heat_transfer:
                 for i in range(1, nx +1):
                     T[j, i-1] = solution[j + (i - 1) * ny - 1]
             self.T_domain_three = T
+            return self.Gamma3
 
 
 
