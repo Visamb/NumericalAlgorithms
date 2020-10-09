@@ -14,8 +14,10 @@ class Domain_One:
         self.Initial_T = 15
 
         # Number of (inner) grid points per unit length
-        self.n = 4
+        self.n = 3
         self.h = 1 / self.n
+
+        self.omega = 0.8
 
         self.T_domain_one = ones((self.n + 2, self.n + 2)) * self.Initial_T
         self.T_domain_one[-1, :] = self.Gamma_N
@@ -73,9 +75,14 @@ class Domain_One:
         #self.T_domain_two[1:int(self.n * 2 / 2 + 1), 0] = self.Gamma1
 
         T = self.T_domain_one
+        Told = self.T_domain_one
+
         for j in range(1, ny + 1):
             for i in range(1, nx + 1):
                 T[j, i] = solution[j + (i - 1) * ny - 1]
         self.T_domain_one = T
+
+        self.T_domain_one = self.omega*self.T_domain_one + (1-self.omega)*Told
+
 
         return self.Gamma1

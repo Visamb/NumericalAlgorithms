@@ -24,23 +24,14 @@ h.compute_distribution(domain = 1)
 print(h.T_domain_one)
 print()
 
+k = 1
 
-
-print("NEW COMPUTATION")
-h.compute_distribution(domain = 2)
-h.compute_distribution(domain = 1)
-h.compute_distribution(domain = 3)
-print(h.T_domain_one)
-print()
-print(h.T_domain_two)
-print()
-print(h.T_domain_three)
-print()
-
-print("NEW COMPUTATION")
-h.compute_distribution(domain = 2)
-h.compute_distribution(domain = 1)
-h.compute_distribution(domain = 3)
+while k < 10:
+    print("NEW COMPUTATION")
+    h.compute_distribution(domain = 2)
+    h.compute_distribution(domain = 1)
+    h.compute_distribution(domain = 3)
+    k+=1
 print(h.T_domain_one)
 print()
 print(h.T_domain_two)
@@ -53,7 +44,8 @@ print()
 
 
 
-print("hej")
+
+
 
 
 

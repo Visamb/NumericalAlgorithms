@@ -14,17 +14,22 @@ class Domain_Two:
         self.Gamma_N = 10
         self.Initial_T = 15
 
+        #Omega for relaxation
+        self.omega = 0.8
+
         # Number of (inner) grid points per unit length
-        self.n = 4
+        self.n = 3
         self.h = 1 / self.n
 
+
         self.T_domain_two = ones((2 * self.n + 2, self.n + 2))
-        self.T_domain_two[0:int(self.n * 2 / 2 + 1), 0] = self.Initial_T
-        self.T_domain_two[int(self.n * 2 / 2 + 1):, 0] = self.Gamma_N
-        self.T_domain_two[0:int(self.n * 2 / 2 + 1), -1] = self.Gamma_N
-        self.T_domain_two[int(self.n * 2 / 2 + 1):, -1] = self.Initial_T
         self.T_domain_two[-1, :] = self.Gamma_H
         self.T_domain_two[0, :] = self.Gamma_WF
+        self.T_domain_two[0:int(self.n * 2 / 2 + 1), 0] = self.Initial_T
+        self.T_domain_two[int(self.n * 2 / 2 + 1)-int(self.n * 2 / 2 + 1):, 0] = self.Gamma_N
+        self.T_domain_two[0:int(self.n * 2 / 2 + 1), -1] = self.Gamma_N
+        self.T_domain_two[int(self.n * 2 / 2 + 1):, -1] = self.Gamma_N
+
 
     def A_matrix(self, nx, ny):
         """
@@ -98,6 +103,7 @@ class Domain_Two:
 
         T = ones((ny + 2, nx + 2))
         T = self.T_domain_two
+        Told = self.T_domain_two
 
         for j in range(1, ny + 1):
             for i in range(1, nx + 1):
@@ -106,5 +112,9 @@ class Domain_Two:
         self.T_domain_two = T
         self.T_domain_two[int(self.n * 2 / 2 + 1):-1, -1] = Gamma_3
         self.T_domain_two[1:int(self.n * 2 / 2 + 1), 0] = Gamma_1
+
+        self.T_domain_two = self.omega*self.T_domain_two + (1-self.omega)*Told
+
+
 
         return self.omega_one_border, self.omega_three_border
