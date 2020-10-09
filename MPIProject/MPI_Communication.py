@@ -10,12 +10,14 @@ class MPI_heat_transfer:
         comm = MPI.COMM_WORLD
         rank = comm.rank  # rank of current process
         size = comm.size  # number of working processes
+        maxiteration = 10
 
         # Initializing domains for storing temperatures.
         print(rank)
         if rank == 0:
             print("Process 1")
             Domain_One = Domain_One()
+            n = Domain_One.n
         if rank == 1:
             print("Process 2")
             Domain_Two = Domain_Two()
@@ -25,7 +27,7 @@ class MPI_heat_transfer:
 
         k = 1
 
-        while k<10:
+        while k<maxiteration:
 
             if rank == 0:
                 if k == 1:
@@ -38,8 +40,9 @@ class MPI_heat_transfer:
                     comm.send(1,dest = 2)
                     comm.send(border, dest=1)
                     k+=1
-                    print(Domain_One.T_domain_one)
-                    print()
+                    if k == maxiteration:
+                        print(Domain_One.T_domain_one)
+                        print()
 
             if rank == 1:
 
@@ -49,9 +52,10 @@ class MPI_heat_transfer:
                 comm.send(gamma1, dest=0)
                 comm.send(gamma2, dest=2)
                 k+=1
+                if k == maxiteration:
 
-                print(Domain_Two.T_domain_two)
-                print()
+                    print(Domain_Two.T_domain_two)
+                    print()
 
             if rank == 2:
                 if k == 1:
@@ -64,9 +68,9 @@ class MPI_heat_transfer:
                     one = comm.recv(source = 0)
                     comm.send(border, dest=1)
                     k+=1
-
-                    print(Domain_Three.T_domain_three)
-                    print()
+                    if k == maxiteration:
+                        print(Domain_Three.T_domain_three)
+                        print()
 
 
 
