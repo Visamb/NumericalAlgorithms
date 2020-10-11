@@ -11,7 +11,7 @@ class Domain_Two:
         # Boundary conditions
         self.Gamma_H = 40
         self.Gamma_WF = 5
-        self.Gamma_N = 10
+        self.Gamma_N = 15
         self.Initial_T = 15
 
         #Omega for relaxation
@@ -22,7 +22,7 @@ class Domain_Two:
         self.h = 1 / self.n
 
 
-        self.T_domain_two = ones((2 * self.n + 2, self.n + 2))
+        self.T_domain_two = ones((2 * self.n + 2, self.n + 2))*self.Initial_T
         self.T_domain_two[-1, :] = self.Gamma_H
         self.T_domain_two[0, :] = self.Gamma_WF
         self.T_domain_two[0:int(self.n * 2 / 2 + 1), 0] = self.Initial_T
@@ -40,8 +40,8 @@ class Domain_Two:
         """
         A = 1 / (self.h ** 2) * diags([-4, 1, 1, 1, 1], [0, 1, -1, ny, -ny], shape=(nx * ny, nx * ny)).toarray()
         for i in range(1, nx):
-            A[nx, nx - 1] = 0
-            A[nx - 1, nx] = 0
+            A[i * ny, i * (ny - 1)] = 0
+            A[i * (ny - 1), i * ny] = 0
         A = csr_matrix(A)
         return A
 
@@ -100,6 +100,7 @@ class Domain_Two:
 
         # Last ny/2 elements are the inner borders that should be sent to Omega3
         self.omega_three_border = solution[nx * ny - int(ny / 2):]
+
 
         T = ones((ny + 2, nx + 2))
         T = self.T_domain_two

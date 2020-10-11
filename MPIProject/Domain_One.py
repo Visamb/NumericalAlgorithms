@@ -10,7 +10,7 @@ class Domain_One:
         # Boundary conditions
         self.Gamma_H = 40
         self.Gamma_WF = 5
-        self.Gamma_N = 10
+        self.Gamma_N = 15
         self.Initial_T = 15
 
         # Number of (inner) grid points per unit length
@@ -33,8 +33,8 @@ class Domain_One:
         """
         A = 1 / (self.h ** 2) * diags([-4, 1, 1, 1, 1], [0, 1, -1, ny, -ny], shape=(nx * ny, nx * ny)).toarray()
         for i in range(1, nx):
-            A[nx, nx - 1] = 0
-            A[nx - 1, nx] = 0
+            A[i * ny, i * (ny - 1)] = 0
+            A[i * (ny - 1), i * ny] = 0
         A = csr_matrix(A)
         return A
 
@@ -54,7 +54,7 @@ class Domain_One:
         B[0:ny] += -self.Gamma_H
 
         # Right Boundary. Last Ny values
-        B[0:ny] += -border
+        B[-ny:] += -border
 
         B = B / self.h ** 2
         return B
@@ -80,6 +80,7 @@ class Domain_One:
         for j in range(1, ny + 1):
             for i in range(1, nx + 1):
                 T[j, i] = solution[j + (i - 1) * ny - 1]
+                #T[2,1] is solution[1]
         self.T_domain_one = T
 
         self.T_domain_one = self.omega*self.T_domain_one + (1-self.omega)*Told
